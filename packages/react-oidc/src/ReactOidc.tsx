@@ -18,7 +18,7 @@ const defaultIsAuthenticated = (getOidc: GetOidcFn, configurationName: string) =
 
 export const useOidc = (configurationName = defaultConfigurationName) => {
   const getOidc = OidcClient.get;
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() =>
     defaultIsAuthenticated(getOidc, configurationName),
   );
 

@@ -115,7 +115,7 @@ export const OidcProvider: FC<PropsWithChildren<OidcProviderProps>> = ({
     );
   };
 
-  const [loading, setLoading] = useState(true);
+  const loading = false;
   const [event, setEvent] = useState(defaultEventState);
   const [currentConfigurationName, setConfigurationName] = useState(configurationName);
 
@@ -181,6 +181,10 @@ export const OidcProvider: FC<PropsWithChildren<OidcProviderProps>> = ({
       setEvent(defaultEventState);
     };
   }, [configuration, configurationName]);
+
+  useEffect(() => {
+    setConfigurationName(configurationName);
+  }, [configurationName]);
 
   const SessionLostComponent = sessionLostComponent;
   const AuthenticatingComponent = authenticatingComponent;

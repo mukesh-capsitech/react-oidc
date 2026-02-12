@@ -71,7 +71,7 @@ export const useOidcUser = <T extends OidcUserInfo = OidcUserInfo>(
       isMounted = false;
       oidc.removeEventSubscription(newSubscriptionId);
     };
-  }, [oidcUserId]);
+  }, [oidcUserId, configurationName, demonstrating_proof_of_possession, oidcPreviousUserId]);
 
   const reloadOidcUser = () => {
     setOidcUserId(oidcUserId + 1);

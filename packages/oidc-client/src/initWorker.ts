@@ -5,7 +5,8 @@ import { OidcConfiguration } from './types.js';
 import codeVersion from './version.js';
 
 let keepAliveServiceWorkerTimeoutId = null;
-let keepAliveController;
+let keepAliveController: AbortController | undefined;
+
 export const sleepAsync = ({ milliseconds }: { milliseconds: any }) => {
   return new Promise(resolve => timer.setTimeout(resolve, milliseconds));
 };
@@ -21,7 +22,10 @@ const keepAlive = (service_worker_keep_alive_path = '/') => {
     promise.catch(error => {
       console.log(error);
     });
-    sleepAsync({ milliseconds: minSleepSeconds * 1000 }).then(keepAlive);
+
+    sleepAsync({ milliseconds: minSleepSeconds * 1000 }).then(() =>
+      keepAlive(service_worker_keep_alive_path),
+    );
   } catch (error) {
     console.log(error);
   }
@@ -44,43 +48,115 @@ export const defaultServiceWorkerUpdateRequireCallback =
   };
 
 export const getTabId = (configurationName: string) => {
-  const tabId = sessionStorage.getItem(`oidc.tabId.${configurationName}`);
-
-  if (tabId) {
-    return tabId;
-  }
+  const key = `oidc.tabId.${configurationName}`;
+  const tabId = sessionStorage.getItem(key);
+  if (tabId) return tabId;
 
   const newTabId = globalThis.crypto.randomUUID();
-  sessionStorage.setItem(`oidc.tabId.${configurationName}`, newTabId);
+  sessionStorage.setItem(key, newTabId);
   return newTabId;
 };
 
-const sendMessageAsync =
-  registration =>
-  (data): Promise<any> => {
-    return new Promise(function (resolve, reject) {
-      const messageChannel = new MessageChannel();
-      messageChannel.port1.onmessage = function (event) {
-        if (event?.data.error) {
-          reject(event.data.error);
-        } else {
-          resolve(event.data);
-        }
+const DEFAULT_SW_MESSAGE_TIMEOUT_MS = 5000;
 
-        messageChannel.port1.close();
-        messageChannel.port2.close();
+const getServiceWorkerTarget = (registration: ServiceWorkerRegistration): ServiceWorker | null => {
+  return (
+    navigator.serviceWorker.controller ??
+    registration.active ??
+    registration.waiting ??
+    registration.installing ??
+    null
+  );
+};
+
+const sendMessageAsync =
+  (registration: ServiceWorkerRegistration, opts?: { timeoutMs?: number }) =>
+  (data: any): Promise<any> => {
+    const timeoutMs = opts?.timeoutMs ?? DEFAULT_SW_MESSAGE_TIMEOUT_MS;
+
+    return new Promise((resolve, reject) => {
+      const target = getServiceWorkerTarget(registration);
+
+      if (!target) {
+        reject(
+          new Error(
+            'Service worker target not available (controller/active/waiting/installing missing)',
+          ),
+        );
+        return;
+      }
+
+      const messageChannel = new MessageChannel();
+      let timeoutId: any = null;
+
+      const cleanup = () => {
+        try {
+          if (timeoutId != null) {
+            timer.clearTimeout(timeoutId);
+            timeoutId = null;
+          }
+          messageChannel.port1.onmessage = null;
+          messageChannel.port1.close();
+          messageChannel.port2.close();
+        } catch (ex) {
+          console.error(ex);
+        }
       };
-      registration.active.postMessage({ ...data, tabId: getTabId(data.configurationName) }, [
-        messageChannel.port2,
-      ]);
+
+      timeoutId = timer.setTimeout(() => {
+        cleanup();
+        reject(
+          new Error(`Service worker did not respond within ${timeoutMs}ms (type=${data?.type})`),
+        );
+      }, timeoutMs);
+
+      messageChannel.port1.onmessage = event => {
+        cleanup();
+        if (event?.data?.error) reject(event.data.error);
+        else resolve(event.data);
+      };
+
+      try {
+        const configurationName = data?.configurationName;
+        target.postMessage({ ...data, tabId: getTabId(configurationName ?? 'default') }, [
+          messageChannel.port2,
+        ]);
+      } catch (err) {
+        cleanup();
+        reject(err);
+      }
     });
   };
+
+const waitForControllerAsync = async (timeoutMs: number) => {
+  if (navigator.serviceWorker.controller) return navigator.serviceWorker.controller;
+
+  return new Promise<ServiceWorker | null>(resolve => {
+    let settled = false;
+    const onChange = () => {
+      if (settled) return;
+      settled = true;
+      navigator.serviceWorker.removeEventListener('controllerchange', onChange);
+      resolve(navigator.serviceWorker.controller ?? null);
+    };
+
+    navigator.serviceWorker.addEventListener('controllerchange', onChange);
+
+    timer.setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      navigator.serviceWorker.removeEventListener('controllerchange', onChange);
+      resolve(navigator.serviceWorker.controller ?? null);
+    }, timeoutMs);
+  });
+};
 
 export const initWorkerAsync = async (
   configuration: OidcConfiguration,
   configurationName: string,
 ) => {
   const serviceWorkerRelativeUrl = configuration.service_worker_relative_url;
+
   if (
     typeof window === 'undefined' ||
     typeof navigator === 'undefined' ||
@@ -95,7 +171,8 @@ export const initWorkerAsync = async (
   }
 
   const swUrl = `${serviceWorkerRelativeUrl}?v=${codeVersion}`;
-  let registration: ServiceWorkerRegistration = null;
+
+  let registration: ServiceWorkerRegistration = null as any;
   if (configuration.service_worker_register) {
     registration = await configuration.service_worker_register(serviceWorkerRelativeUrl);
   } else {
@@ -104,40 +181,75 @@ export const initWorkerAsync = async (
     });
   }
 
+  // (Optional but useful on Safari) ask for update early
+  try {
+    await registration.update();
+  } catch (ex) {
+    console.error(ex);
+  }
+
   // 1) Détection updatefound
   registration.addEventListener('updatefound', () => {
     const newSW = registration.installing;
     stopKeepAlive();
-    newSW?.addEventListener('statechange', () => {
+
+    newSW?.addEventListener('statechange', async () => {
       if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
         stopKeepAlive();
-        console.log('New SW waiting – skipWaiting()');
-        newSW.postMessage({ type: 'SKIP_WAITING' });
+        console.log('New SW waiting – SKIP_WAITING');
+
+        try {
+          // Use MessageChannel to avoid “fire and forget” hangs
+          await sendMessageAsync(registration, { timeoutMs: 8000 })({
+            type: 'SKIP_WAITING',
+            configurationName,
+            data: null,
+          });
+        } catch (e) {
+          console.warn('SKIP_WAITING failed', e);
+        }
       }
     });
   });
 
-  // 2) Quand le SW actif change, on reload
+  // 2) Quand le SW actif change, on reload (once)
+  const reloadKey = `oidc.sw.controllerchange.reloaded.${configurationName}`;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
+    try {
+      if (sessionStorage.getItem(reloadKey) === '1') return;
+      sessionStorage.setItem(reloadKey, '1');
+    } catch {
+      // ignore
+    }
+
     console.log('SW controller changed – reloading page');
     stopKeepAlive();
     window.location.reload();
   });
 
-  // 3) Claim + init classique
+  // 3) Claim + init classique (Safari-safe)
   try {
     await navigator.serviceWorker.ready;
+
+    // If the callback page is not yet controlled, ask claim then wait a bit.
     if (!navigator.serviceWorker.controller) {
-      await sendMessageAsync(registration)({ type: 'claim' });
+      await sendMessageAsync(registration, { timeoutMs: 8000 })({
+        type: 'claim',
+        configurationName,
+        data: null,
+      });
+
+      await waitForControllerAsync(2000);
     }
-  } catch (err) {
-    console.warn(`Failed init ServiceWorker ${err.toString()}`);
+  } catch (err: any) {
+    console.warn(`Failed init ServiceWorker ${err?.toString?.() ?? String(err)}`);
     return null;
   }
 
   const clearAsync = async status => {
     return sendMessageAsync(registration)({ type: 'clear', data: { status }, configurationName });
   };
+
   const initAsync = async (
     oidcServerConfiguration,
     where,
@@ -205,13 +317,14 @@ export const initWorkerAsync = async (
       configurationName,
     });
   };
+
   const getNonceAsync = async (fallback: boolean = true) => {
-    // @ts-ignore
     const result = await sendMessageAsync(registration)({
       type: 'getNonce',
       data: null,
       configurationName,
     });
+
     // @ts-ignore
     let nonce = result.nonce;
     if (!nonce) {
@@ -289,6 +402,7 @@ export const initWorkerAsync = async (
       data: null,
       configurationName,
     });
+
     // @ts-ignore
     let state = result.state;
     if (!state) {
@@ -317,6 +431,7 @@ export const initWorkerAsync = async (
       data: null,
       configurationName,
     });
+
     // @ts-ignore
     let codeVerifier = result.codeVerifier;
     if (!codeVerifier) {
