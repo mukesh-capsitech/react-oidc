@@ -1,6 +1,11 @@
 # Changelog
 
-## 7.26.3
+## 7.26.4
+
+- [9a44940d](https://github.com/AxaFrance/oidc-client/commit/9a44940d0f65255618d7727d7033afa1dbab7239) - fix(oidc-client): sw with safari 17 (#1636) (release), 2026-02-12 by *Guillaume Chervet*
+
+
+## v7.26.3
 
 
 
@@ -318,10 +323,5 @@
 ## v7.22.0
 
 - [032a00b5](https://github.com/AxaFrance/oidc-client/commit/032a00b501557fe6b5be48e83e4914051ee2c7f0) - feat(oidc): control dpop injection (release) (#1342), 2024-04-10 by *Guillaume Chervet*
-
-
-## v7.21.0
-
-- [8335b5a6](https://github.com/AxaFrance/oidc-client/commit/8335b5a6f5c02d320d642a022ff3828513f5a43e) - feat(dpop): add extras (alpha) (#1325) (release), 2024-03-28 by *Guillaume Chervet*
 
 
