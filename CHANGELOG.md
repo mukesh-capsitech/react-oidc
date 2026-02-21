@@ -1,6 +1,11 @@
 # Changelog
 
-## 7.26.4
+## 7.26.5
+
+- [da37c1c2](https://github.com/AxaFrance/oidc-client/commit/da37c1c29b79d20abc8aeeca17a18155f4274a7e) - fix(react-oidc): remove dangling `setLoading` call in OidcProvider (#1639) (release), 2026-02-21 by *Copilot*
+
+
+## v7.26.4
 
 - [9a44940d](https://github.com/AxaFrance/oidc-client/commit/9a44940d0f65255618d7727d7033afa1dbab7239) - fix(oidc-client): sw with safari 17 (#1636) (release), 2026-02-12 by *Guillaume Chervet*
 
@@ -318,10 +323,5 @@
 ## v7.22.1
 
 - [be246585](https://github.com/AxaFrance/oidc-client/commit/be2465852e837b749abd3a86c5c0caa57a2ea8b6) - refactor(all): update libs (release), 2024-04-15 by *Guillaume Chervet*
-
-
-## v7.22.0
-
-- [032a00b5](https://github.com/AxaFrance/oidc-client/commit/032a00b501557fe6b5be48e83e4914051ee2c7f0) - feat(oidc): control dpop injection (release) (#1342), 2024-04-10 by *Guillaume Chervet*
 
 
