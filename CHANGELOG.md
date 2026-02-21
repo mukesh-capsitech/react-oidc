@@ -1,6 +1,12 @@
 # Changelog
 
-## 7.26.6
+## 7.26.7
+
+- [46bd6a89](https://github.com/AxaFrance/oidc-client/commit/46bd6a89b803ca9c2c9aedf0a0fa1d73d229b995) - docs: clarify that allowMultiTabLogin requires OIDC fetch wrapper for API calls (#1643) (release), 2026-02-21 by *Copilot*
+- [f35ae017](https://github.com/AxaFrance/oidc-client/commit/f35ae0174664ea8abcc6c79b608958d0b2164636) - Fix `useOidcUser` stuck in Loading state after reloadOidcUser() (#1642), 2026-02-21 by *Copilot*
+
+
+## v7.26.6
 
 - [46d74602](https://github.com/AxaFrance/oidc-client/commit/46d746024d7420f8386f18217c77ff5bc6ccc83e) - Fix null extras values being encoded as literal "null" string in query params (#1640) (release), 2026-02-21 by *Copilot*
 
@@ -318,10 +324,5 @@
 ## v7.22.3
 
 - [5af80754](https://github.com/AxaFrance/oidc-client/commit/5af807548e35c64da74fc3547e35c8ec512399ba) - fix(all): types import in index.ts for all typescript (release), 2024-04-18 by *Guillaume Chervet*
-
-
-## v7.22.2
-
-- [b17217d6](https://github.com/AxaFrance/oidc-client/commit/b17217d6b829dee3b28f444fda099fce9c94bc41) - fix(react-oidc): unused var in User.txs (release), 2024-04-16 by *Guillaume Chervet*
 
 
