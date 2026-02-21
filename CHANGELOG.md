@@ -1,6 +1,11 @@
 # Changelog
 
-## 7.26.5
+## 7.26.6
+
+- [46d74602](https://github.com/AxaFrance/oidc-client/commit/46d746024d7420f8386f18217c77ff5bc6ccc83e) - Fix null extras values being encoded as literal "null" string in query params (#1640) (release), 2026-02-21 by *Copilot*
+
+
+## v7.26.5
 
 - [da37c1c2](https://github.com/AxaFrance/oidc-client/commit/da37c1c29b79d20abc8aeeca17a18155f4274a7e) - fix(react-oidc): remove dangling `setLoading` call in OidcProvider (#1639) (release), 2026-02-21 by *Copilot*
 
@@ -318,10 +323,5 @@
 ## v7.22.2
 
 - [b17217d6](https://github.com/AxaFrance/oidc-client/commit/b17217d6b829dee3b28f444fda099fce9c94bc41) - fix(react-oidc): unused var in User.txs (release), 2024-04-16 by *Guillaume Chervet*
-
-
-## v7.22.1
-
-- [be246585](https://github.com/AxaFrance/oidc-client/commit/be2465852e837b749abd3a86c5c0caa57a2ea8b6) - refactor(all): update libs (release), 2024-04-15 by *Guillaume Chervet*
 
 
