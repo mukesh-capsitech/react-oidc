@@ -1,6 +1,11 @@
 # Changelog
 
-## 7.27.0
+## 7.27.1
+
+- [362cd3ad](https://github.com/AxaFrance/oidc-client/commit/362cd3adfecb4056558d9f9b503f503c091b0b7a) - fix(oid-client): service worker update (#1649) (release), 2026-03-18 by *Guillaume Chervet*
+
+
+## v7.27.0
 
 - [48d3ad02](https://github.com/AxaFrance/oidc-client/commit/48d3ad028d7b8ccbd6504bb2682f72e0b079643c) - feat(oidc-client): Add a 'login_state_storage' option to allow storing the auth flow state separately to tokens (#1646) (release), 2026-03-11 by *Alex O'Callaghan*
 
@@ -318,11 +323,5 @@
 
 - [bcba15b4](https://github.com/AxaFrance/oidc-client/commit/bcba15b412063d139c0902de117b0516150c13a2) - fix(react-oidc): compatibility with react 19 (release) (#1372), 2024-05-22 by *Guillaume Chervet*
 - [c49a8572](https://github.com/AxaFrance/oidc-client/commit/c49a8572702c485c9a089b0f9aa11eb4bc6e7f1d) - refactor(test): add missing logout test case, 2024-05-22 by *Guillaume Chervet*
-
-
-## v7.22.5
-
-- [8d9fd955](https://github.com/AxaFrance/oidc-client/commit/8d9fd9550a74a771936f0e686eb31fe271cd912b) - fix(oidc): user loaded 401 when preload true and not serviceworder mode (release), 2024-05-19 by *Guillaume Chervet*
-- [d764b2bd](https://github.com/AxaFrance/oidc-client/commit/d764b2bd7319711c49a393c1fd3496d054661065) - refatcor(all): update librairies, 2024-05-18 by *Guillaume Chervet*
 
 
