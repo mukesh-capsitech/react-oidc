@@ -1,6 +1,11 @@
 # Changelog
 
-## 7.27.1
+## 7.27.2
+
+- [61b2ee62](https://github.com/AxaFrance/oidc-client/commit/61b2ee62093098e30cb15c9b2bb7102283876a3c) - fix(service-worker): add timeout to token renewal wait loop to prevent indefinite fetch blocking (#1654) (release), 2026-04-20 by *Copilot*
+
+
+## v7.27.1
 
 - [362cd3ad](https://github.com/AxaFrance/oidc-client/commit/362cd3adfecb4056558d9f9b503f503c091b0b7a) - fix(oid-client): service worker update (#1649) (release), 2026-03-18 by *Guillaume Chervet*
 
@@ -317,11 +322,5 @@
 
 - [9f4cbf41](https://github.com/AxaFrance/oidc-client/commit/9f4cbf414e1b41f448b2a36d759a035786d26668) - fix(oidc): 2 readmes with the same name (release) (#1377), 2024-06-07 by *meesvandongen*
 - [0bfabd41](https://github.com/AxaFrance/oidc-client/commit/0bfabd41d67cad57415905b7ce729ee4fe85c8b4) - fix(oidc): session lost to quickly (alpha) (#1381), 2024-06-07 by *Guillaume Chervet*
-
-
-## v7.22.6
-
-- [bcba15b4](https://github.com/AxaFrance/oidc-client/commit/bcba15b412063d139c0902de117b0516150c13a2) - fix(react-oidc): compatibility with react 19 (release) (#1372), 2024-05-22 by *Guillaume Chervet*
-- [c49a8572](https://github.com/AxaFrance/oidc-client/commit/c49a8572702c485c9a089b0f9aa11eb4bc6e7f1d) - refactor(test): add missing logout test case, 2024-05-22 by *Guillaume Chervet*
 
 
