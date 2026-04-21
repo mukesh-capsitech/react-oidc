@@ -1,6 +1,11 @@
 # Changelog
 
-## 7.27.2
+## 7.27.3
+
+- [3ae9f19f](https://github.com/AxaFrance/oidc-client/commit/3ae9f19f7ff304a85de103424865ebc63675d866) - fix: cache service worker registration to prevent repeated register calls (#1655) (release), 2026-04-21 by *Copilot*
+
+
+## v7.27.2
 
 - [61b2ee62](https://github.com/AxaFrance/oidc-client/commit/61b2ee62093098e30cb15c9b2bb7102283876a3c) - fix(service-worker): add timeout to token renewal wait loop to prevent indefinite fetch blocking (#1654) (release), 2026-04-20 by *Copilot*
 
@@ -316,11 +321,5 @@
 ## v7.22.8
 
 - [c4cf94b6](https://github.com/AxaFrance/oidc-client/commit/c4cf94b62a7b2c45cf0f94438a02f0cb5f06b9b0) - fix(oidc): remove dynamic web worker blocked by policies (release) (#1386), 2024-06-18 by *Guillaume Chervet*
-
-
-## v7.22.7
-
-- [9f4cbf41](https://github.com/AxaFrance/oidc-client/commit/9f4cbf414e1b41f448b2a36d759a035786d26668) - fix(oidc): 2 readmes with the same name (release) (#1377), 2024-06-07 by *meesvandongen*
-- [0bfabd41](https://github.com/AxaFrance/oidc-client/commit/0bfabd41d67cad57415905b7ce729ee4fe85c8b4) - fix(oidc): session lost to quickly (alpha) (#1381), 2024-06-07 by *Guillaume Chervet*
 
 
