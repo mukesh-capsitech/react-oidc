@@ -1,6 +1,14 @@
 # Changelog
 
-## 7.27.3
+## 7.27.4
+
+- [9d94b3d6](https://github.com/AxaFrance/oidc-client/commit/9d94b3d64a0cec857106b15e87ddcd1777ef42d7) - chore(all): Update workspace libraries (#1659) (release), 2026-04-27 by *Copilot*
+- [78a0bfa6](https://github.com/AxaFrance/oidc-client/commit/78a0bfa6281c0891ce4b7abde786ffdcd119d964) - Remove sonar badges from all README.md files (#1658), 2026-04-24 by *Copilot*
+- [a18f8101](https://github.com/AxaFrance/oidc-client/commit/a18f81018dc8cd24620028b05912a46bb1f2ff72) - docs: remove twitter badge, add npm weekly downloads badges to READMEs (#1657), 2026-04-24 by *Copilot*
+- [06918197](https://github.com/AxaFrance/oidc-client/commit/06918197a2ba6d549e2927cdf60a7019deb0fea7) - Remove sonar badges from README.md (#1656), 2026-04-24 by *Copilot*
+
+
+## v7.27.3
 
 - [3ae9f19f](https://github.com/AxaFrance/oidc-client/commit/3ae9f19f7ff304a85de103424865ebc63675d866) - fix: cache service worker registration to prevent repeated register calls (#1655) (release), 2026-04-21 by *Copilot*
 
@@ -316,10 +324,5 @@
 ## v7.22.9
 
 - [77eb9e18](https://github.com/AxaFrance/oidc-client/commit/77eb9e1841814cfeb6c6672159740dad4c0a9d4d) - fix(oidc): MessageChannel is not closed after message is received (release) (#1396), 2024-07-02 by *radk0s*
-
-
-## v7.22.8
-
-- [c4cf94b6](https://github.com/AxaFrance/oidc-client/commit/c4cf94b62a7b2c45cf0f94438a02f0cb5f06b9b0) - fix(oidc): remove dynamic web worker blocked by policies (release) (#1386), 2024-06-18 by *Guillaume Chervet*
 
 
